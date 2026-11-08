@@ -30,7 +30,7 @@ export type TimelineEntry = {
  * Kolom yang masih "" atau [] ditandai chip "Belum diisi" di halaman.
  */
 export const profile = {
-  name: "",
+  name: "Hafiz Syauqi",
   handle: "hafiz-syq",
   nameLines: [] as string[],
   roles: [
@@ -40,11 +40,11 @@ export const profile = {
     "Pembelajar Terus",
   ],
   status: "",
-  location: "",
-  tagline: "",
+  location: "Banda Aceh, Indonesia",
+  tagline: "Always Learning Something New",
   bio: [] as string[],
-  email: "",
-  whatsapp: "",
+  email: "hafizsyq@gmail.com",
+  whatsapp: "083127596144",
   resumeUrl: "",
   socials: [
     { label: "GitHub", url: "https://github.com/hafiz-syq/MyPortofolio" },
