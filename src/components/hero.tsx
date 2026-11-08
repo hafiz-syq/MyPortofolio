@@ -8,9 +8,12 @@ import { SplitHeadline } from "./anime/split-headline";
 import { StaggerGrid } from "./anime/stagger-grid";
 import { profile, projects, tickerItems } from "../data/portfolio";
 
+const nameWords = profile.name.trim().split(/\s+/).filter(Boolean);
 const nameLines = profile.nameLines.length
   ? profile.nameLines
-  : [profile.name || "Nama", "Kamu"];
+  : nameWords.length
+    ? nameWords
+    : ["Nama", "Kamu"];
 
 function Ticker() {
   const row = (ariaHidden: boolean) => (
