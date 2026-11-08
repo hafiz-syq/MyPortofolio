@@ -35,9 +35,10 @@ export const profile = {
   nameLines: ["Hafiz Syauqi"] as string[],
   roles: [
     "Web Developer",
-    "Perakit Antarmuka",
-    "Penjaga Basis Data",
-    "Pembelajar Terus",
+    "UI/UX Maker",
+    "Database Security",
+    "Always Learn",
+    "Trust The Process",
   ],
   status: "Web Dev Junior",
   location: "Banda Aceh, Indonesia",
