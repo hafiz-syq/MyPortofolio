@@ -84,7 +84,7 @@ export const projects: Project[] = [
     summary:
       "Platform belajar pemrograman gratis: katalog modul, editor kode langsung di browser, kuis, arena latihan, dan forum diskusi.",
     stack: ["React", "TypeScript", "Vite", "Tailwind CSS", "shadcn/ui", "PostgreSQL"],
-    links: [],
+    links: [{label: "EduVerse", url: "https://eduverselearn.vercel.app/"}],
     featured: true,
   },
   {
@@ -94,7 +94,7 @@ export const projects: Project[] = [
     summary:
       "Situs materi induksi mahasiswa teknik: jadwal kegiatan, struktur organisasi, materi keagamaan, dan teks ikrar — ringan, tanpa framework.",
     stack: ["HTML", "CSS", "JavaScript"],
-    links: [],
+    links: [{label: "Khusus Mahasiswa Teknik Unaya",url: "-"}],
   },
   {
     title: "Portal Organisasi Mahasiswa",
