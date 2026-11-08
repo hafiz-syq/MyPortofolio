@@ -1,0 +1,495 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "../vendor/shadcn-tailwind-4.13.0.css";
+
+@utility scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+@utility scrollbar-none {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility scrollbar-gutter-stable {
+  scrollbar-gutter: stable;
+}
+
+:root {
+  --chart-1: #d4f24b;
+  --chart-2: #6ce5a4;
+  --chart-3: #ff5b3d;
+  --chart-4: #8e51ff;
+  --chart-5: #ffb900;
+  --radius: 16px;
+}
+
+@theme inline {
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 8px);
+  --radius-md: calc(var(--radius) - 4px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 8px);
+  --font-sans: var(--site-font);
+  --font-mono: var(--site-font-mono);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--site-font);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--site-accent);
+    color: var(--site-on-accent);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--site-accent);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  .display {
+    font-family: var(--site-font-display);
+    letter-spacing: -0.02em;
+    line-height: 0.86;
+    text-transform: uppercase;
+  }
+
+  .label {
+    font-family: var(--site-font-mono);
+    font-size: calc(0.72rem * var(--site-type));
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+  }
+}
+
+@layer utilities {
+  /* anime.js yang menggerakkan; CSS hanya menahan elemennya tetap tersembunyi
+     sampai ScrollObserver memicu animasi. Kelas ini dipasang hanya jika
+     motion diizinkan, jadi konten tidak pernah hilang untuk reduced-motion. */
+  .motion-ready [data-reveal] {
+    opacity: 0;
+  }
+
+  .stagger-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--grid-cols, 24), 1fr);
+    grid-template-rows: repeat(var(--grid-rows, 12), 1fr);
+  }
+
+  .grid-dot {
+    place-self: center;
+    width: 3px;
+    height: 3px;
+    border-radius: 9999px;
+    background: color-mix(in srgb, var(--site-fg) 55%, transparent);
+    opacity: 0.22;
+    will-change: transform, opacity;
+  }
+
+  /* Karakter hasil split() anime.js harus inline-block supaya bisa ditranslasikan. */
+  .char {
+    display: inline-block;
+    will-change: transform, opacity;
+  }
+
+  .line-draw svg {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .line-draw .ink {
+    stroke: color-mix(in srgb, var(--site-fg) 72%, transparent);
+  }
+
+  .line-draw .accent {
+    stroke: var(--site-accent);
+  }
+
+  .morph-host {
+    display: grid;
+    place-items: center;
+    min-height: 15rem;
+  }
+
+  .morph-blob {
+    width: min(15rem, 62%);
+    height: auto;
+  }
+
+  .morph-blob path[data-tone="accent"] {
+    fill: color-mix(in srgb, var(--site-accent) 24%, transparent);
+  }
+
+  /*Sumber bentuk untuk morphTo: harus tetap punya geometri, jadi visibility,
+    bukan display. */
+  .morph-source {
+    visibility: hidden;
+  }
+
+  .morph-blob path[data-tone="hot"] {
+    fill: color-mix(in srgb, var(--site-hot) 22%, transparent);
+  }
+
+  .drag-area {
+    background:
+      radial-gradient(120% 120% at 50% 0%, color-mix(in srgb, var(--site-surface) 90%, transparent), transparent 70%),
+      var(--site-bg);
+    background-image: radial-gradient(color-mix(in srgb, var(--site-fg) 12%, transparent) 1px, transparent 1px);
+    background-size: 26px 26px;
+  }
+
+  .sticker {
+    padding: 0.55rem 0.8rem;
+    border: 1px solid var(--site-border);
+    background: var(--site-surface);
+    color: var(--site-fg);
+    border-radius: calc(var(--site-radius) - 8px);
+    touch-action: none;
+    cursor: grab;
+    user-select: none;
+    will-change: transform;
+  }
+
+  .scrub-rail {
+    height: 2px;
+    background: var(--site-border);
+  }
+
+  .scrub-track {
+    height: 100%;
+    background: var(--site-accent);
+    transform-origin: left center;
+    transform: scaleX(0);
+  }
+
+  .scrub-steps {
+    display: grid;
+    gap: 1.5rem 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    margin-top: 1.75rem;
+  }
+
+  .scrub-step {
+    color: var(--site-muted);
+    letter-spacing: 0.14em;
+    will-change: transform, opacity;
+  }
+
+  .scrub-index {
+    display: block;
+    color: var(--site-fg);
+    margin-bottom: 0.4rem;
+  }
+
+  .cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 70;
+    width: 34px;
+    height: 34px;
+    margin: -17px 0 0 -17px;
+    border: 1px solid color-mix(in srgb, var(--site-muted) 70%, transparent);
+    border-radius: 9999px;
+    pointer-events: none;
+    will-change: transform;
+  }
+
+  .cursor-ring[data-hot="true"] {
+    border-color: var(--site-accent);
+  }
+
+  .lab-card {
+    border: 1px solid var(--site-border);
+    border-radius: var(--site-radius);
+    background: color-mix(in srgb, var(--site-surface) 70%, transparent);
+    padding: 1.5rem;
+  }
+
+  /* Filter project menyembunyikan baris; aturan ini menang atas display:grid baris. */
+  .project-row[hidden] {
+    display: none;
+  }
+
+  .filter-chip {
+    font-family: var(--site-font-mono);
+    font-size: calc(0.72rem * var(--site-type));
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 0.45rem 0.9rem;
+    border: 1px solid var(--site-border);
+    border-radius: 9999px;
+    color: var(--site-muted);
+    will-change: transform;
+  }
+
+  .filter-chip[data-active="true"] {
+    background: var(--site-accent);
+    border-color: var(--site-accent);
+    color: var(--site-on-accent);
+  }
+
+  .ticker {
+    animation: ticker calc(30s * var(--site-motion)) linear infinite;
+  }
+
+  .ticker-track {
+    display: flex;
+    width: max-content;
+  }
+
+  .grain {
+    position: fixed;
+    inset: -60%;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation: grain-shift calc(9s * var(--site-motion)) steps(5) infinite;
+  }
+
+  .glow-blob {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(90px);
+    animation: drift calc(16s * var(--site-motion)) ease-in-out infinite alternate;
+  }
+
+  .spotlight {
+    background: radial-gradient(
+      420px circle at var(--mx, 50%) var(--my, 50%),
+      color-mix(in srgb, var(--site-accent) 16%, transparent),
+      transparent 70%
+    );
+  }
+
+  .hover-lift {
+    transition:
+      transform calc(400ms * var(--site-motion)) cubic-bezier(0.16, 1, 0.3, 1),
+      border-color calc(400ms * var(--site-motion)) ease;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    border-color: color-mix(in srgb, var(--site-accent) 65%, transparent);
+  }
+
+  .stroke-text {
+    color: transparent;
+    -webkit-text-stroke: 1.5px color-mix(in srgb, var(--site-fg) 30%, transparent);
+    transition: color calc(400ms * var(--site-motion)) ease;
+  }
+
+  .group:hover .stroke-text {
+    color: color-mix(in srgb, var(--site-accent) 24%, transparent);
+  }
+
+  .dot-live {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--site-accent) 60%, transparent);
+    animation: pulse-ring calc(2.4s * var(--site-motion)) ease-out infinite;
+  }
+
+  .scroll-cue {
+    animation: cue-drop calc(1.9s * var(--site-motion)) ease-in-out infinite;
+  }
+}
+
+@keyframes ticker {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes grain-shift {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-4%, 3%);
+  }
+  50% {
+    transform: translate(3%, -4%);
+  }
+  75% {
+    transform: translate(-3%, -2%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes drift {
+  to {
+    transform: translate3d(6%, -8%, 0) scale(1.18);
+  }
+}
+
+@keyframes pulse-ring {
+  70% {
+    box-shadow: 0 0 0 12px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+@keyframes cue-drop {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translateY(9px);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  :root {
+    --site-motion: 0;
+  }
+
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .cursor-ring {
+    display: none;
+  }
+
+  .grain,
+  .glow-blob,
+  .dot-live,
+  .scroll-cue,
+  .ticker {
+    animation: none;
+  }
+}
+
+/* 设计参数使用工程原有样式管理，工作台只临时覆盖变量。 */
+:root {
+  --site-bg: #0b0b0e;
+  --site-fg: #f5f5f0;
+  --site-accent: #d4f24b;
+  --site-on-accent: #101306;
+  --site-surface: #14141a;
+  --site-muted: #8f8f9b;
+  --site-border: rgba(255, 255, 255, 0.13);
+  --site-hot: #ff5b3d;
+  --site-font: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --site-font-display: "Archivo Black", "Space Grotesk", Impact, sans-serif;
+  --site-font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --site-radius: 16px;
+  --site-space: 1;
+  --site-type: 1;
+  --site-motion: 1;
+}
+
+:root {
+  --background: var(--site-bg);
+  --foreground: var(--site-fg);
+  --card: var(--site-surface);
+  --card-foreground: var(--site-fg);
+  --popover: var(--site-surface);
+  --popover-foreground: var(--site-fg);
+  --primary: var(--site-accent);
+  --primary-foreground: var(--site-on-accent);
+  --secondary: var(--site-surface);
+  --secondary-foreground: var(--site-fg);
+  --muted: var(--site-surface);
+  --muted-foreground: var(--site-muted);
+  --accent: var(--site-surface);
+  --accent-foreground: var(--site-fg);
+  --destructive: var(--site-hot);
+  --border: var(--site-border);
+  --input: var(--site-border);
+  --ring: var(--site-muted);
+  --sidebar: var(--site-surface);
+  --sidebar-foreground: var(--site-fg);
+  --sidebar-primary: var(--site-accent);
+  --sidebar-primary-foreground: var(--site-on-accent);
+  --sidebar-accent: var(--site-surface);
+  --sidebar-accent-foreground: var(--site-fg);
+  --sidebar-border: var(--site-border);
+  --sidebar-ring: var(--site-muted);
+  --radius: var(--site-radius);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --spacing: calc(0.25rem * var(--site-space));
+  --text-xs: calc(0.75rem * var(--site-type));
+  --text-sm: calc(0.875rem * var(--site-type));
+  --text-base: calc(1rem * var(--site-type));
+  --text-lg: calc(1.125rem * var(--site-type));
+  --text-xl: calc(1.25rem * var(--site-type));
+  --text-2xl: calc(1.5rem * var(--site-type));
+  --text-3xl: calc(1.875rem * var(--site-type));
+  --text-4xl: calc(2.25rem * var(--site-type));
+  --text-5xl: calc(3rem * var(--site-type));
+  --text-6xl: calc(3.75rem * var(--site-type));
+  --text-7xl: calc(4.5rem * var(--site-type));
+  --text-8xl: calc(6rem * var(--site-type));
+  --text-9xl: calc(8rem * var(--site-type));
+  --default-transition-duration: calc(150ms * var(--site-motion));
+}
+
+@layer base {
+  button,
+  a {
+    transition-duration: calc(150ms * var(--site-motion));
+  }
+}
