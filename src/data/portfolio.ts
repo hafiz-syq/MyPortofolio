@@ -49,7 +49,7 @@ export const profile = {
   ] as string[],
   email: "hafizsyq@gmail.com",
   whatsapp: "+62 83127596144",
-  resumeUrl: "",
+  resumeUrl: "/hafiz-syauqi-cv.pdf",
   socials: [
     { label: "GitHub", url: "https://github.com/hafiz-syq/MyPortofolio" },
     { label: "Instagram", url: "https://www.instagram.com/hafiz.syq/"},
