@@ -1,5 +1,3 @@
-import { url } from "inspector";
-
 export type ProjectLink = {
   label: string;
   url: string;
@@ -44,7 +42,11 @@ export const profile = {
   status: "Web Dev Junior",
   location: "Banda Aceh, Indonesia",
   tagline: "Always Learning Something New",
-  bio: [] as string[],
+  bio: [
+    "Saya mulai ngoding dari nol di 2022 — bukan dari kuliah, tapi dari rasa penasaran lihat website organisasi yang bisa dirapikan sendiri. Tiga tahun belajar mandiri, sekarang S1 Sistem Informasi di Universitas Abulyatama, dan tetap belajar tiap hari: Always Learning Something New bukan cuma tempelan di beranda.",
+    "Sampai sekarang semuanya saya kerjakan sendiri: merancang struktur datanya, merakit antarmukanya, menyambung API-nya, sampai menjaga deploy-nya tidak mati keesokan harinya. Untuk Portal Organisasi Mahasiswa BEM FT UNAYA saya pegang dari skema basis data sampai cron job; untuk situs materi induksi saya sengaja tidak pakai framework supaya ringan dan dibuka cepat di HP mahasiswa. Alat tidak menentukan — yang penting problemnya selesai.",
+    "Saya perfeksionis di detail yang jarang dilihat orang: animasi yang benar-benar memakai anime.js, kontras teks yang lolos audit aksesibilitas, dan skor Lighthouse 100 di mobile maupun desktop. Yang paling saya cari berikutnya adalah project yang dibaca orang banyak — dan tempat di mana saya bisa code review sekalian belajar DevOps dari orang yang lebih berpengalaman.",
+  ] as string[],
   email: "hafizsyq@gmail.com",
   whatsapp: "+62 83127596144",
   resumeUrl: "",
