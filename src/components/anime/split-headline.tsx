@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef } from "react";
 import { animate, splitText, stagger } from "animejs";
-import { prefersReducedMotion } from "../../lib/motion";
+import { prefersReducedMotion, hasPrerenderedShell } from "../../lib/motion";
 
 /** Judul dipecah per karakter lalu dilepas dengan spring — demo "text splitting" anime.js. */
 export function SplitHeadline({ lines, className }: { lines: string[]; className?: string }) {
@@ -10,10 +10,12 @@ export function SplitHeadline({ lines, className }: { lines: string[]; className
     const el = ref.current;
     if (!el || prefersReducedMotion()) return;
     const splitter = splitText(el, { chars: { class: "char" } });
+    // Shell ter-paint duluan -> judul cuma digeser masuk (opacity 1 -> 1), tidak dipadamkan.
+    const blank = !hasPrerenderedShell;
     const anim = animate(splitter.chars, {
-      opacity: [0, 1],
-      translateY: [115, 0],
-      rotate: [7, 0],
+      opacity: [blank ? 0 : 1, 1],
+      translateY: [blank ? 115 : 34, 0],
+      rotate: [blank ? 7 : 5, 0],
       duration: 1300,
       delay: stagger(32, { from: "first", ease: "outQuad" }),
       ease: "spring(1, 90, 12, 0)",

@@ -1,6 +1,33 @@
-@import "tailwindcss";
+@import "tailwindcss" source(none);
+@source "../src";
+@source "../components/ui/button.tsx";
 @import "tw-animate-css";
 @import "../vendor/shadcn-tailwind-4.13.0.css";
+
+/* Subset latin, disimpan sendiri supaya tidak ada request render-blocking ke Google. */
+@font-face {
+  font-family: "Archivo Black";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/archivo-black-latin.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/space-grotesk-latin.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 400 500;
+  font-display: swap;
+  src: url("/fonts/jetbrains-mono-latin.woff2") format("woff2");
+}
 
 @utility scrollbar-thin {
   scrollbar-width: thin;
@@ -297,12 +324,12 @@
 
   .stroke-text {
     color: transparent;
-    -webkit-text-stroke: 1.5px color-mix(in srgb, var(--site-fg) 30%, transparent);
+    -webkit-text-stroke: 1.5px color-mix(in srgb, var(--site-fg) 42%, transparent);
     transition: color calc(400ms * var(--site-motion)) ease;
   }
 
   .group:hover .stroke-text {
-    color: color-mix(in srgb, var(--site-accent) 24%, transparent);
+    color: color-mix(in srgb, var(--site-accent) 45%, transparent);
   }
 
   .dot-live {

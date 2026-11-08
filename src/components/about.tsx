@@ -1,12 +1,11 @@
 import { EmptyField } from "./empty-field";
 import { Reveal } from "./reveal";
 import { Section } from "./section";
-import { prefersReducedMotion } from "../lib/motion";
 import { profile, stats } from "../data/portfolio";
 
-/** Angkanya dianimasikan oleh countUpAll() di App — di sini cuma penanda + nilai akhir. */
+/** Angka akhirnya ikut di-render (bagus tanpa JS); countUpAll() yang resets ke 0 saat mulai. */
 function StatValue({ value }: { value: number }) {
-  return <span data-count={value}>{prefersReducedMotion() ? value : 0}</span>;
+  return <span data-count={value}>{value}</span>;
 }
 
 export function About() {
@@ -28,13 +27,11 @@ export function About() {
         <dl className="grid grid-cols-2 gap-8 self-start lg:grid-cols-1 lg:gap-10">
           {stats.map((stat, order) => (
             <Reveal key={stat.label} delay={order * 90}>
-              <div>
-                <dt className="sr-only">{stat.label}</dt>
-                <dd className="display text-[clamp(2.6rem,7vw,4.5rem)] text-primary">
-                  <StatValue value={stat.value} />
-                </dd>
-                <p className="label mt-2 text-muted-foreground">{stat.label}</p>
-              </div>
+              <dt className="sr-only">{stat.label}</dt>
+              <dd className="display text-[clamp(2.6rem,7vw,4.5rem)] text-primary">
+                <StatValue value={stat.value} />
+              </dd>
+              <dd className="label mt-2 text-muted-foreground">{stat.label}</dd>
             </Reveal>
           ))}
         </dl>

@@ -1,7 +1,55 @@
 import { animate, type JSAnimation } from "animejs";
 
+/**
+ * True kalau HTML sudah bawa markup hasil prerender: kontennya ter-paint lebih dulu,
+ * jadi animasi masuk tidak boleh memadamkannya lagi (kelihatan kedip).
+ */
+export const hasPrerenderedShell =
+  typeof document !== "undefined" && Boolean(document.getElementById("root")?.firstElementChild);
+
 export function prefersReducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+/**
+ * Menjalankan setup berat satu frame setelah mount, lalu saat CPU sedang kosong.
+ * Kenapa: createDrawable/morphTo membaca geometri SVG dan kisi titik membaca
+ * rect, dan keduanya memaksa layout di tengah proses mount React — itu muncul
+ * sebagai forced reflow + menambah Total Blocking Time di Lighthouse mobile.
+ * Kalau host diisi (komponen di bawah lipatan), setup menunggu elemen terlihat:
+ * papan drag atau loop morph tidak perlu memakan main thread sebelum dipakai.
+ */
+export function whenIdle(run: () => void, host?: Element) {
+  let cancelRun: () => void = () => {};
+  const schedule = () => {
+    const raf = requestAnimationFrame(() => {
+      if (typeof window.requestIdleCallback === "function") {
+        const handle = window.requestIdleCallback(run, { timeout: 1200 });
+        cancelRun = () => window.cancelIdleCallback(handle);
+      } else {
+        const timer = window.setTimeout(run, 180);
+        cancelRun = () => window.clearTimeout(timer);
+      }
+    });
+    cancelRun = () => cancelAnimationFrame(raf);
+  };
+  if (host) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        observer.disconnect();
+        schedule();
+      },
+      { rootMargin: "100px" },
+    );
+    observer.observe(host);
+    return () => {
+      observer.disconnect();
+      cancelRun();
+    };
+  }
+  schedule();
+  return () => cancelRun();
 }
 
 /**

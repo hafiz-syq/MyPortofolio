@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { animate, createDrawable, stagger, type JSAnimation } from "animejs";
-import { prefersReducedMotion, whenVisible } from "../../lib/motion";
+import { prefersReducedMotion, whenIdle, whenVisible } from "../../lib/motion";
 
 /** SVG yang menggambar dirinya sendiri: createDrawable + stroke-dash lewat anime.js. */
 export function LineDraw({ label }: { label: string }) {
@@ -9,22 +9,29 @@ export function LineDraw({ label }: { label: string }) {
   useEffect(() => {
     const host = hostRef.current;
     if (!host || prefersReducedMotion()) return;
-    const shapes = createDrawable(host.querySelectorAll("path, circle, line"));
-    let animation: JSAnimation | null = null;
-    const stopObserving = whenVisible(host, "svg", 0.45, () => {
-      animation = animate(shapes, {
-        draw: "0 1",
-        duration: 1700,
-        ease: "inOutQuad",
-        delay: stagger(160),
+    let stop: (() => void) | undefined;
+    const cancel = whenIdle(() => {
+      const shapes = createDrawable(host.querySelectorAll("path, circle, line"));
+      let animation: JSAnimation | null = null;
+      const stopObserving = whenVisible(host, "svg", 0.45, () => {
+        animation = animate(shapes, {
+          draw: "0 1",
+          duration: 1700,
+          ease: "inOutQuad",
+          delay: stagger(160),
+        });
       });
-    });
+      stop = () => {
+        stopObserving();
+        if (animation) {
+          animation.pause();
+          animation.revert();
+        }
+      };
+    }, host);
     return () => {
-      stopObserving();
-      if (animation) {
-        animation.pause();
-        animation.revert();
-      }
+      cancel();
+      stop?.();
     };
   }, []);
 

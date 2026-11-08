@@ -1,8 +1,16 @@
 import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
+import { createRoot, hydrateRoot } from "react-dom/client";
 import App from "./App";
 import "./globals.css";
 
-createRoot(document.getElementById("root")!).render(
-  <StrictMode><App /></StrictMode>,
+const container = document.getElementById("root")!;
+const tree = (
+  <StrictMode>
+    <App />
+  </StrictMode>
 );
+
+// Build menyuntik markup ke #root, jadi tugas client cuma menempelkan listener.
+// Dev server masih mengirim root kosong, sehingga harus mount biasa.
+if (container.firstElementChild) hydrateRoot(container, tree);
+else createRoot(container).render(tree);

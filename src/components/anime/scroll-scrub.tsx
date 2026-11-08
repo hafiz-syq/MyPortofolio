@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { createTimeline, onScroll } from "animejs";
-import { prefersReducedMotion } from "../../lib/motion";
+import { prefersReducedMotion, whenIdle } from "../../lib/motion";
 
 /** Strip proses yang di-scrub oleh posisi scroll: timeline + ScrollObserver (sync). */
 export function ScrollScrub({ steps }: { steps: string[] }) {
@@ -9,19 +9,23 @@ export function ScrollScrub({ steps }: { steps: string[] }) {
   useEffect(() => {
     const host = hostRef.current;
     if (!host || prefersReducedMotion()) return;
-    const items = Array.from(host.querySelectorAll<HTMLElement>("[data-step]"));
-    const track = host.querySelector<HTMLElement>("[data-track]");
-    const tl = createTimeline({ autoplay: onScroll({ target: host, enter: 0, leave: 1, sync: true }) });
-    if (track) tl.add(track, { scaleX: [0, 1], duration: 200, ease: "linear" }, 0);
-    tl.add(items, {
-      opacity: [0.2, 1],
-      translateY: [26, 0],
-      duration: 160,
-      ease: "outQuad",
-    });
+    let tl: ReturnType<typeof createTimeline> | undefined;
+    const cancel = whenIdle(() => {
+      const items = Array.from(host.querySelectorAll<HTMLElement>("[data-step]"));
+      const track = host.querySelector<HTMLElement>("[data-track]");
+      tl = createTimeline({ autoplay: onScroll({ target: host, enter: 0, leave: 1, sync: true }) });
+      if (track) tl.add(track, { scaleX: [0, 1], duration: 200, ease: "linear" }, 0);
+      tl.add(items, {
+        opacity: [0.2, 1],
+        translateY: [26, 0],
+        duration: 160,
+        ease: "outQuad",
+      });
+    }, host);
     return () => {
-      tl.pause();
-      tl.revert();
+      cancel();
+      tl?.pause();
+      tl?.revert();
     };
   }, []);
 

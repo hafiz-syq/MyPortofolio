@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { createTimeline, morphTo } from "animejs";
-import { prefersReducedMotion } from "../../lib/motion";
+import { prefersReducedMotion, whenIdle } from "../../lib/motion";
 
 const SHAPES = [
   "M150 22 C 232 22 280 72 278 150 C 276 230 228 280 150 278 C 72 276 22 230 22 150 C 22 72 68 22 150 22 Z",
@@ -19,19 +19,23 @@ export function MorphBlob({ tone = "accent" }: { tone?: "accent" | "hot" }) {
   useEffect(() => {
     const svg = hostRef.current;
     if (!svg || prefersReducedMotion()) return;
-    const target = svg.querySelector<SVGPathElement>("[data-morph]");
-    const sources = Array.from(svg.querySelectorAll<SVGPathElement>("[data-shape]"));
-    if (!target || sources.length < 2) return;
-    const timeline = createTimeline({ loop: true });
-    for (let index = 1; index <= sources.length; index += 1) {
-      timeline.add(target, {
-        d: morphTo(sources[index % sources.length], 0.12),
-        duration: 2600,
-        ease: "inOutSine",
-      });
-    }
+    let timeline: ReturnType<typeof createTimeline> | undefined;
+    const cancel = whenIdle(() => {
+      const target = svg.querySelector<SVGPathElement>("[data-morph]");
+      const sources = Array.from(svg.querySelectorAll<SVGPathElement>("[data-shape]"));
+      if (!target || sources.length < 2) return;
+      timeline = createTimeline({ loop: true });
+      for (let index = 1; index <= sources.length; index += 1) {
+        timeline.add(target, {
+          d: morphTo(sources[index % sources.length], 0.12),
+          duration: 2600,
+          ease: "inOutSine",
+        });
+      }
+    }, svg);
     return () => {
-      timeline.pause();
+      cancel();
+      timeline?.pause();
     };
   }, []);
 
