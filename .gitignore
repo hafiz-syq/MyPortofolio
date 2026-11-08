@@ -10,3 +10,6 @@ dist/
 .playwright-mcp/
 visualizationOutput/
 *.log
+
+.vercel
+.env*
