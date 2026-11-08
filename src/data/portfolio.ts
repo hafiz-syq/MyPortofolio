@@ -94,7 +94,7 @@ export const projects: Project[] = [
     summary:
       "Situs materi induksi mahasiswa teknik: jadwal kegiatan, struktur organisasi, materi keagamaan, dan teks ikrar — ringan, tanpa framework.",
     stack: ["HTML", "CSS", "JavaScript"],
-    links: [{label: "Khusus Mahasiswa Teknik Unaya",url: "-"}],
+    links: [{label: "-",url: "-"}],
   },
   {
     title: "Portal Organisasi Mahasiswa",
