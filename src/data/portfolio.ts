@@ -1,3 +1,5 @@
+import { url } from "inspector";
+
 export type ProjectLink = {
   label: string;
   url: string;
@@ -32,7 +34,7 @@ export type TimelineEntry = {
 export const profile = {
   name: "Hafiz Syauqi",
   handle: "hafiz-syq",
-  nameLines: [] as string[],
+  nameLines: ["Hafiz Syauqi"] as string[],
   roles: [
     "Web Developer",
     "Perakit Antarmuka",
@@ -99,7 +101,7 @@ export const projects: Project[] = [
     summary:
       "Portal resmi organisasi fakultas untuk informasi kegiatan, dokumen organisasi, dan akun anggota, dengan basis data produksi.",
     stack: ["Next.js", "Vercel", "MySQL", "Cron job"],
-    links: [],
+    links: [{label: "BEM-FT UNAYA" ,url: "https://bem-ft-unaya.vercel.app/#/"}],
   },
 ];
 
