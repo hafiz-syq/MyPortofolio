@@ -44,7 +44,7 @@ export const profile = {
   tagline: "Always Learning Something New",
   bio: [] as string[],
   email: "hafizsyq@gmail.com",
-  whatsapp: "083127596144",
+  whatsapp: "+62 83127596144",
   resumeUrl: "",
   socials: [
     { label: "GitHub", url: "https://github.com/hafiz-syq/MyPortofolio" },
