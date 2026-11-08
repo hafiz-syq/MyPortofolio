@@ -39,7 +39,7 @@ export const profile = {
     "Penjaga Basis Data",
     "Pembelajar Terus",
   ],
-  status: "",
+  status: "Web Dev Junior",
   location: "Banda Aceh, Indonesia",
   tagline: "Always Learning Something New",
   bio: [] as string[],
@@ -48,6 +48,7 @@ export const profile = {
   resumeUrl: "",
   socials: [
     { label: "GitHub", url: "https://github.com/hafiz-syq/MyPortofolio" },
+    { label: "Instagram", url: "https://www.instagram.com/hafiz.syq/"},
   ] as ProjectLink[],
 };
 
@@ -74,7 +75,7 @@ export const stats = [
 export const projects: Project[] = [
   {
     title: "EduVerse",
-    year: "",
+    year: "2026",
     role: "Perancang & pengembang tunggal",
     summary:
       "Platform belajar pemrograman gratis: katalog modul, editor kode langsung di browser, kuis, arena latihan, dan forum diskusi.",
@@ -84,7 +85,7 @@ export const projects: Project[] = [
   },
   {
     title: "Portal Materi Teknik",
-    year: "",
+    year: "2026",
     role: "Pengembang & pengelola konten",
     summary:
       "Situs materi induksi mahasiswa teknik: jadwal kegiatan, struktur organisasi, materi keagamaan, dan teks ikrar — ringan, tanpa framework.",
@@ -93,7 +94,7 @@ export const projects: Project[] = [
   },
   {
     title: "Portal Organisasi Mahasiswa",
-    year: "",
+    year: "2026",
     role: "Pengembang & pengelola sistem",
     summary:
       "Portal resmi organisasi fakultas untuk informasi kegiatan, dokumen organisasi, dan akun anggota, dengan basis data produksi.",
@@ -117,7 +118,26 @@ export const skillGroups: SkillGroup[] = [
   },
 ];
 
-export const timeline: TimelineEntry[] = [];
+export const timeline: TimelineEntry[] = [
+  {
+    period: "2019 - 2022",
+    title: "MAS RUHUL ISLAM ANAK BANGSA",
+    place: "Aceh, Aceh Besar",
+    note: "SMA/MA Sederajat",
+  },
+  {
+    period: "2022 - 2025",
+    title: "Self Learning (Web Dev)",
+    place: "Aceh, Banda Aceh",
+    note: "Mulai mengenal dunia Web Developer",
+  },
+  {
+    period: "2025 - Sekarang",
+    title: "Universitas Abulyatama",
+    place: "Aceh, Aceh Besar",
+    note: "S1 Sistem Informasi",
+  },
+];
 
 export const availability = {
   headline: "Punya ide? Kirim detailnya, saya balas dengan estimasi kerja.",
