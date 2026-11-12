@@ -5,7 +5,10 @@ import { EmptyField } from "./empty-field";
 import { Reveal } from "./reveal";
 import { Section } from "./section";
 import { prefersReducedMotion } from "../lib/motion";
-import { projects, type Project } from "../data/portfolio";
+import { useLocale } from "../i18n/locale";
+import type { Project } from "../data/portfolio";
+
+const ALL = "__all__";
 
 /**
  * Filter baris + FLIP: posisi lama diukur sebelum filter berubah, lalu anime.js
@@ -52,7 +55,7 @@ function ProjectLinks({ project, order }: { project: Project; order: number }) {
     <ul className="flex flex-wrap gap-2">
       {project.links.map((link) => (
         <li key={link.url}>
-          <Button asChild size="sm" variant={link.label.toLowerCase().includes("kode") ? "outline" : "default"} className="rounded-full px-5">
+          <Button asChild size="sm" variant={/kode|code/i.test(link.label) ? "outline" : "default"} className="rounded-full px-5">
             <a href={link.url} target="_blank" rel="noreferrer">
               {link.label}
               <span aria-hidden="true">↗</span>
@@ -72,6 +75,7 @@ type RowProps = {
 };
 
 function ProjectRow({ project, order, isShown, register }: RowProps) {
+  const { ui } = useLocale();
   const setNode = useCallback(
     (node: HTMLDivElement | null) => {
       register(project.title, node);
@@ -95,7 +99,7 @@ function ProjectRow({ project, order, isShown, register }: RowProps) {
               {project.title}
             </h3>
             {project.featured ? (
-              <span className="label bg-primary px-2 py-1 text-primary-foreground">Utama</span>
+              <span className="label bg-primary px-2 py-1 text-primary-foreground">{ui.projects.featured}</span>
             ) : null}
             {project.year ? (
               <span className="label text-muted-foreground">{project.year}</span>
@@ -132,23 +136,26 @@ function ProjectRow({ project, order, isShown, register }: RowProps) {
 }
 
 export function Projects() {
+  const { ui, content } = useLocale();
   const chips = useMemo(() => {
     const counts = new Map<string, number>();
-    for (const project of projects) {
+    for (const project of content.projects) {
       for (const item of project.stack) counts.set(item, (counts.get(item) ?? 0) + 1);
     }
-    return ["Semua", ...[...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8).map(([name]) => name)];
-  }, []);
+    return [ALL, ...[...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8).map(([name]) => name)];
+  }, [content.projects]);
 
-  const [active, setActive] = useState("Semua");
+  const [active, setActive] = useState(ALL);
   const shown = useMemo(
     () =>
       new Set(
-        active === "Semua"
-          ? projects.map((project) => project.title)
-          : projects.filter((project) => project.stack.includes(active)).map((project) => project.title),
+        active === ALL
+          ? content.projects.map((project) => project.title)
+          : content.projects
+              .filter((project) => project.stack.includes(active))
+              .map((project) => project.title),
       ),
-    [active],
+    [active, content.projects],
   );
   const register = useFlipRows(active, shown);
 
@@ -163,15 +170,9 @@ export function Projects() {
     <Section
       id="project"
       index="02"
-      eyebrow="Karya"
-      title="Semua hasil project saya"
-      intro={
-        <p>
-          {projects.length} project yang saya rancang dan bangun sendiri. Tiap baris menampilkan
-          peran saya, isinya, dan teknologinya — klik chip di bawah untuk menyaringnya, barisnya
-          akan berpindah dengan animasi FLIP anime.js.
-        </p>
-      }
+      eyebrow={ui.nav.work}
+      title={ui.projects.title}
+      intro={<p>{ui.projects.intro(content.projects.length)}</p>}
     >
       <div className="flex flex-wrap items-center gap-2">
         {chips.map((chip) => (
@@ -182,16 +183,16 @@ export function Projects() {
             data-active={chip === active}
             onClick={(event) => pick(chip, event)}
           >
-            {chip}
+            {chip === ALL ? ui.projects.all : chip}
           </button>
         ))}
         <span role="status" aria-live="polite" className="label ml-auto text-muted-foreground">
-          {shown.size} dari {projects.length} project
+          {ui.projects.shown(shown.size, content.projects.length)}
         </span>
       </div>
 
       <div className="mt-10 border-b border-border">
-        {projects.map((project, order) => (
+        {content.projects.map((project, order) => (
           <ProjectRow
             key={project.title}
             project={project}

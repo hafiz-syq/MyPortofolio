@@ -6,22 +6,16 @@ import { Magnetic } from "./anime/magnetic";
 import { ScrambleRole } from "./anime/scramble-role";
 import { SplitHeadline } from "./anime/split-headline";
 import { StaggerGrid } from "./anime/stagger-grid";
-import { profile, projects, tickerItems } from "../data/portfolio";
-
-const nameWords = profile.name.trim().split(/\s+/).filter(Boolean);
-const nameLines = profile.nameLines.length
-  ? profile.nameLines
-  : nameWords.length
-    ? nameWords
-    : ["Nama", "Kamu"];
+import { useLocale } from "../i18n/locale";
 
 function Ticker() {
+  const { content } = useLocale();
   const row = (ariaHidden: boolean) => (
     <ul
       className="ticker-track shrink-0 items-center gap-8 pr-8"
       aria-hidden={ariaHidden || undefined}
     >
-      {tickerItems.map((item) => (
+      {content.tickerItems.map((item) => (
         <li key={item} className="label flex items-center gap-8 whitespace-nowrap text-muted-foreground">
           {item}
           <span className="text-primary" aria-hidden="true">
@@ -43,8 +37,16 @@ function Ticker() {
 }
 
 export function Hero() {
+  const { ui, content } = useLocale();
+  const profile = content.profile;
   const reduced = usePrefersReducedMotion();
   const spotRef = useRef<HTMLElement>(null);
+  const nameWords = profile.name.trim().split(/\s+/).filter(Boolean);
+  const nameLines = profile.nameLines.length
+    ? profile.nameLines
+    : nameWords.length
+      ? nameWords
+      : ui.hero.nameFallback;
 
   const trackPointer = (event: MouseEvent<HTMLElement>) => {
     const node = spotRef.current;
@@ -96,7 +98,7 @@ export function Hero() {
         style={{ writingMode: "vertical-rl" }}
         aria-hidden="true"
       >
-        Portofolio · {new Date().getFullYear()}
+        {ui.hero.year} · {new Date().getFullYear()}
       </p>
 
       <div className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center gap-8 px-5 sm:px-8">
@@ -135,29 +137,28 @@ export function Hero() {
         </div>
 
         <p className="max-w-2xl text-lg text-muted-foreground sm:text-xl">
-          {profile.tagline ||
-            "Satu baris tentang apa yang kamu bangun dan untuk siapa — tulis di tagline di src/data/portfolio.ts."}
+          {profile.tagline || ui.hero.taglineHint}
         </p>
 
         <div className="flex flex-wrap gap-3">
           <Magnetic>
             <Button asChild size="lg" className="rounded-full px-7">
               <a href="#project">
-                Lihat project
+                {ui.hero.viewProjects}
                 <span aria-hidden="true">↓</span>
               </a>
             </Button>
           </Magnetic>
           <Magnetic strength={0.24}>
             <Button asChild size="lg" variant="outline" className="rounded-full px-7">
-              <a href="#kontak">Ngobrol dulu</a>
+              <a href="#kontak">{ui.hero.talk}</a>
             </Button>
           </Magnetic>
           {profile.resumeUrl ? (
             <Magnetic strength={0.24}>
               <Button asChild size="lg" variant="ghost" className="rounded-full px-7">
                 <a href={profile.resumeUrl} target="_blank" rel="noreferrer">
-                  Unduh CV
+                  {ui.hero.downloadCv}
                 </a>
               </Button>
             </Magnetic>
@@ -172,10 +173,10 @@ export function Hero() {
             <span className="scroll-cue inline-block" aria-hidden="true">
               ↓
             </span>
-            Scroll
+            {ui.hero.scroll}
           </a>
           <span className="label text-muted-foreground">
-            {projects.length} project terpilih
+            {ui.hero.selected(content.projects.length)}
           </span>
         </div>
       </div>

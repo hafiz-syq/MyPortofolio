@@ -4,9 +4,12 @@ import { EmptyField } from "./empty-field";
 import { Magnetic } from "./anime/magnetic";
 import { Reveal } from "./reveal";
 import { Section } from "./section";
-import { availability, profile } from "../data/portfolio";
+import { useLocale } from "../i18n/locale";
 
 export function Contact() {
+  const { ui, content } = useLocale();
+  const profile = content.profile;
+  const availability = content.availability;
   const [copied, setCopied] = useState(false);
 
   const copyEmail = async () => {
@@ -24,8 +27,8 @@ export function Contact() {
     <Section
       id="kontak"
       index="06"
-      eyebrow="Kontak"
-      title="Ngobrolin projectnya"
+      eyebrow={ui.nav.contact}
+      title={ui.contact.title}
       intro={<p>{availability.headline}</p>}
     >
       <div className="grid gap-12 lg:grid-cols-[2fr_1fr] lg:gap-16">
@@ -42,11 +45,11 @@ export function Contact() {
               <div className="mt-5 flex flex-wrap items-center gap-3">
                 <Magnetic strength={0.2}>
                   <Button size="sm" variant="outline" className="rounded-full px-5" onClick={copyEmail}>
-                    Salin email
+                    {ui.contact.copyEmail}
                   </Button>
                 </Magnetic>
                 <span role="status" aria-live="polite" className="label text-primary">
-                  {copied ? "Tersalin" : ""}
+                  {copied ? ui.contact.copied : ""}
                 </span>
               </div>
             </Reveal>
@@ -83,7 +86,7 @@ export function Contact() {
 
         <Reveal delay={100}>
           <div>
-            <p className="label text-muted-foreground">Ada di mana saja</p>
+            <p className="label text-muted-foreground">{ui.contact.elsewhere}</p>
             {profile.socials.length ? (
               <ul className="mt-5 space-y-3">
                 {profile.socials.map((social) => (

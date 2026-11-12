@@ -1,15 +1,8 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { profile } from "../data/portfolio";
-
-const links = [
-  { href: "#tentang", label: "Tentang" },
-  { href: "#project", label: "Project" },
-  { href: "#keahlian", label: "Keahlian" },
-  { href: "#lab", label: "Lab" },
-  { href: "#perjalanan", label: "Perjalanan" },
-];
+import { useLocale } from "../i18n/locale";
+import { LanguageSwitch } from "./language-switch";
 
 function monogram(name: string) {
   const initials = name
@@ -23,6 +16,14 @@ function monogram(name: string) {
 }
 
 export function SiteNav() {
+  const { ui, content } = useLocale();
+  const links = [
+    { href: "#tentang", label: ui.nav.about },
+    { href: "#project", label: ui.nav.projects },
+    { href: "#keahlian", label: ui.nav.skills },
+    { href: "#lab", label: ui.nav.lab },
+    { href: "#perjalanan", label: ui.nav.journey },
+  ];
   const [progress, setProgress] = useState(0);
   const [solid, setSolid] = useState(false);
 
@@ -47,10 +48,10 @@ export function SiteNav() {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4 sm:px-8">
         <a href="#atas" className="label text-muted-foreground hover:text-primary">
-          {monogram(profile.name)} <span className="sr-only">Ke bagian atas</span>
+          {monogram(content.profile.name)} <span className="sr-only">{ui.nav.toTop}</span>
         </a>
 
-        <nav aria-label="Navigasi utama" className="hidden items-center gap-1 md:flex">
+        <nav aria-label={ui.nav.mainLabel} className="hidden items-center gap-1 md:flex">
           {links.map((link) => (
             <a
               key={link.href}
@@ -63,13 +64,16 @@ export function SiteNav() {
           ))}
         </nav>
 
-        <Button asChild size="sm" className="rounded-full px-5">
-          <a href="#kontak">Hubungi</a>
-        </Button>
+        <div className="flex items-center gap-2 sm:gap-3">
+          <LanguageSwitch />
+          <Button asChild size="sm" className="rounded-full px-5">
+            <a href="#kontak">{ui.nav.contact}</a>
+          </Button>
+        </div>
       </div>
 
       <nav
-        aria-label="Navigasi utama versi ringkas"
+        aria-label={ui.nav.compactLabel}
         className="scrollbar-none flex gap-2 overflow-x-auto px-5 pb-3 md:hidden"
       >
         {links.map((link) => (

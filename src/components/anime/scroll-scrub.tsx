@@ -36,7 +36,7 @@ export function ScrollScrub({ steps }: { steps: string[] }) {
       </div>
       <ol className="scrub-steps">
         {steps.map((step, order) => (
-          <li key={step} data-step className="label scrub-step">
+          <li key={order} data-step className="label scrub-step">
             <span className="scrub-index">{String(order + 1).padStart(2, "0")}</span>
             {step}
           </li>

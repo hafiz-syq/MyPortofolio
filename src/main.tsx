@@ -1,12 +1,15 @@
 import { StrictMode } from "react";
 import { createRoot, hydrateRoot } from "react-dom/client";
 import App from "./App";
+import { LocaleProvider } from "./i18n/locale";
 import "./globals.css";
 
 const container = document.getElementById("root")!;
 const tree = (
   <StrictMode>
-    <App />
+    <LocaleProvider>
+      <App />
+    </LocaleProvider>
   </StrictMode>
 );
 

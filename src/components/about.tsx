@@ -1,7 +1,7 @@
 import { EmptyField } from "./empty-field";
 import { Reveal } from "./reveal";
 import { Section } from "./section";
-import { profile, stats } from "../data/portfolio";
+import { useLocale } from "../i18n/locale";
 
 /** Angka akhirnya ikut di-render (bagus tanpa JS); countUpAll() yang resets ke 0 saat mulai. */
 function StatValue({ value }: { value: number }) {
@@ -9,12 +9,14 @@ function StatValue({ value }: { value: number }) {
 }
 
 export function About() {
+  const { ui, content } = useLocale();
+  const profile = content.profile;
   return (
     <Section
       id="tentang"
       index="01"
-      eyebrow="Tentang"
-      title={profile.name ? `Halo, saya ${profile.name}.` : "Tentang saya"}
+      eyebrow={ui.nav.about}
+      title={profile.name ? ui.about.greeting(profile.name) : ui.about.greetingBare}
       intro={
         profile.tagline ? (
           <p>{profile.tagline}</p>
@@ -25,8 +27,8 @@ export function About() {
     >
       <div className="grid gap-12 lg:grid-cols-[0.9fr_2fr] lg:gap-20">
         <dl className="grid grid-cols-2 gap-8 self-start lg:grid-cols-1 lg:gap-10">
-          {stats.map((stat, order) => (
-            <Reveal key={stat.label} delay={order * 90}>
+          {content.stats.map((stat, order) => (
+            <Reveal key={order} delay={order * 90}>
               <dt className="sr-only">{stat.label}</dt>
               <dd className="display text-[clamp(2.6rem,7vw,4.5rem)] text-primary">
                 <StatValue value={stat.value} />
@@ -47,8 +49,7 @@ export function About() {
             <Reveal>
               <EmptyField path="profile.bio" />
               <p className="mt-5 max-w-2xl">
-                Isi 2–3 paragraf: latar belakangmu, apa yang kamu kerjakan sekarang, dan jenis
-                project yang ingin kamu terima. Ganti contoh di{" "}
+                {ui.about.hint}{" "}
                 <code className="font-mono text-base text-foreground">src/data/portfolio.ts</code>.
               </p>
             </Reveal>
