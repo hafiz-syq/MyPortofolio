@@ -10,6 +10,12 @@ import type { Project } from "../data/portfolio";
 
 const ALL = "__all__";
 
+/** data/portfolio.ts diisi manual; "-" dan string kosong berarti tautan belum ada. */
+function isFilledUrl(url: string) {
+  const value = url.trim();
+  return value !== "" && value !== "-";
+}
+
 /**
  * Filter baris + FLIP: posisi lama diukur sebelum filter berubah, lalu anime.js
  * menutup selisihnya supaya baris terlihat berpindah, bukan melompat.
@@ -48,12 +54,13 @@ function useFlipRows(active: string, shown: Set<string>) {
 }
 
 function ProjectLinks({ project, order }: { project: Project; order: number }) {
-  if (!project.links.length) {
+  const links = project.links.filter((link) => isFilledUrl(link.url));
+  if (!links.length) {
     return <EmptyField path={`projects[${order}].links`} />;
   }
   return (
     <ul className="flex flex-wrap gap-2">
-      {project.links.map((link) => (
+      {links.map((link) => (
         <li key={link.url}>
           <Button asChild size="sm" variant={/kode|code/i.test(link.label) ? "outline" : "default"} className="rounded-full px-5">
             <a href={link.url} target="_blank" rel="noreferrer">

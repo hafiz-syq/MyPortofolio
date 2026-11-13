@@ -62,20 +62,21 @@ const enProjects: Record<string, Partial<Project>> = {
 
 const enSkillGroups: Record<string, Partial<SkillGroup>> = {
   Frontend: { items: ["React", "TypeScript", "Tailwind CSS", "anime.js", "shadcn/ui", "Semantic HTML"] },
-  "Backend & Data": {
-    group: "Backend & Data",
-    items: ["Node.js", "REST APIs", "MySQL", "PostgreSQL", "Schema design", "Cron jobs"],
-  },
-  "Alat Kerja": {
-    group: "Tooling",
-    items: ["Git & GitHub", "Vite", "Vercel", "Qoder / AI-assisted coding", "Figma"],
-  },
+  "Backend & Data": { items: ["Node.js", "REST APIs", "MySQL", "PostgreSQL", "Schema design", "Cron jobs"] },
+  "Alat Kerja": { group: "Tooling" },
 };
 
+/**
+ * Place ditulis ulang supaya ikut urutan Inggris (kota dulu, baru provinsi);
+ * format "Provinsi, Kota" di data asli tidak diterjemahkan apa adanya.
+ */
 const enTimeline: Record<string, Partial<TimelineEntry>> = {
-  "MAS RUHUL ISLAM ANAK BANGSA": { note: "Islamic senior high school (MA equivalent)" },
+  "MAS RUHUL ISLAM ANAK BANGSA": {
+    place: "Aceh Besar, Aceh",
+    note: "Islamic senior high school (MA equivalent)",
+  },
   "Self Learning (Web Dev)": {
-    period: "2022 - 2025",
+    place: "Banda Aceh, Aceh",
     note: "Where I found web development",
   },
   "Universitas Abulyatama": {

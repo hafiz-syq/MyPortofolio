@@ -1,8 +1,8 @@
 @import "tailwindcss" source(none);
-@source "../src";
-@source "../components/ui/button.tsx";
 @import "tw-animate-css";
 @import "../vendor/shadcn-tailwind-4.13.0.css";
+@source "../src";
+@source "../components/ui/button.tsx";
 
 /* Subset latin, disimpan sendiri supaya tidak ada request render-blocking ke Google. */
 @font-face {

@@ -8,7 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import { buildContent, type SiteContent } from "./content-en";
-import { defaultLocale, readStoredLocale, storeLocale, type Locale } from "./locales";
+import { defaultLocale, ogLocale, readStoredLocale, storeLocale, type Locale } from "./locales";
 import { ui, type UiCopy } from "./ui";
 
 type LocaleValue = {
@@ -19,6 +19,11 @@ type LocaleValue = {
 };
 
 const LocaleContext = createContext<LocaleValue | null>(null);
+
+function setMetaContent(selector: string, content: string) {
+  const node = document.querySelector(selector);
+  if (node) node.setAttribute("content", content);
+}
 
 /**
  * Render pertama selalu defaultLocale supaya identik dengan markup hasil prerender;
@@ -37,8 +42,10 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     const copy = ui[locale];
     document.documentElement.lang = locale;
     document.title = copy.meta.title;
-    const description = document.querySelector('meta[name="description"]');
-    if (description) description.setAttribute("content", copy.meta.description);
+    setMetaContent('meta[name="description"]', copy.meta.description);
+    setMetaContent('meta[property="og:title"]', copy.meta.title);
+    setMetaContent('meta[property="og:description"]', copy.meta.description);
+    setMetaContent('meta[property="og:locale"]', ogLocale[locale]);
   }, [locale]);
 
   const pick = useCallback((next: Locale) => {

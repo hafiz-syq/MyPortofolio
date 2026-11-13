@@ -8,6 +8,9 @@ export const localeCodes: Locale[] = ["id", "en"];
  */
 export const defaultLocale: Locale = "id";
 
+/** Nilai <meta property="og:locale"> per bahasa (kode bahasa + wilayah). */
+export const ogLocale: Record<Locale, string> = { id: "id_ID", en: "en_US" };
+
 const storageKey = "portfolio-locale";
 
 export function readStoredLocale(): Locale {
